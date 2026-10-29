@@ -1,0 +1,11 @@
+.env
+*.bak
+*.mdf
+*.ldf
+__pycache__/
+.venv/
+venv/
+outputs/
+*.xlsx
+!examples/*.xlsx
+.DS_Store
