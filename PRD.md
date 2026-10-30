@@ -12,11 +12,11 @@ Ghi/sửa/xóa dữ liệu; dự báo; biểu đồ phức tạp; phân quyền 
 ## Quyết định nghiệp vụ (Hòa tự chọn và ghi lý do)
 | # | Câu hỏi | Lựa chọn của Hòa | Lý do |
 |---|---|---|---|
-| 1 | "Doanh thu" tính theo cột nào? (SubTotal / TotalDue / tổng LineTotal) | Hướng C: mặc định SubTotal, có nhánh TotalDue theo từ khóa, vùng xám thì hỏi lại. | Hướng này sẽ tiếp cận khái quát những gì diễn ra trong quy trình vận hành thực tế. |
-| 2 | Đơn trạng thái nào được tính? (cột Status có đơn bị hủy/từ chối) | A: chỉ tính đơn Status = 5 (Shipped) | Doanh thu ghi nhận khi hàng đã giao cho khách. |
-| 3 | Quý theo lịch hay năm tài chính? | ___ | ___ |
-| 4 | Câu thiếu năm ("doanh thu quý 1"): hỏi lại hay lấy năm gần nhất? | ___ | ___ |
-| 5 | Ngưỡng chấp nhận cho story 1 và 4 | ___ % | ___ |
+| 1 | "Doanh thu" tính theo cột nào? (SubTotal / TotalDue / tổng LineTotal) | Hướng C: mặc định SubTotal, có nhánh TotalDue theo từ khóa, vùng xám thì hỏi lại. | Ban đầu nghiêng về TotalDue, nhưng TotalDue cao hơn SubTotal khoảng 12.2% (gồm thuế và phí vận chuyển) và không chia được theo sản phẩm. SubTotal trùng LineTotal nên nhất quán mọi nhóm câu hỏi. Vẫn giữ nhánh TotalDue vì người dùng thật có lúc cần số khách phải trả, và ghi chú rõ có/không gồm thuế trong mọi kết quả. |
+| 2 | Đơn trạng thái nào được tính? (cột Status có đơn bị hủy/từ chối) | A: chỉ tính đơn Status = 5 (Shipped) | Doanh thu ghi nhận khi hàng đã giao cho khách. Hạn chế: dữ liệu mẫu chỉ có Status = 5 nên bộ test không kiểm tra được việc lọc. |
+| 3 | Quý theo lịch hay năm tài chính? | A: quý theo lịch (Q1 = tháng 1-3) | Dự án ưu tiên dễ hình dung, dễ hiểu. Thực tế quý có thể theo năm tài chính, ghi nhận là hạn chế. |
+| 4 | Câu thiếu năm ("doanh thu quý 1"): hỏi lại hay lấy năm gần nhất? | Hỏi lại (NHÁP, xét lại sau baseline) | "Năm gần nhất" không ổn định trong dữ liệu 2011-06/2014: Q1 và Q2 gần nhất là 2014, nhưng Q3 và Q4 gần nhất là 2013. Tự đoán dễ ra con số trông hợp lý nhưng sai ý người hỏi. Đổi lại người dùng mất thêm một lượt trả lời, nên đo cả tỉ lệ hỏi lại thừa ở câu đã rõ năm. |
+| 5 | Ngưỡng chấp nhận cho story 1 và 4 | Story 1: ≥ 70 %. Story 4: ≥ 80 % hỏi lại đúng, và hỏi lại thừa ≤ 10 % (NHÁP) | Chưa có căn cứ đo. Đặt tạm để có mốc, sẽ xét lại sau baseline. Story 4 cao hơn vì sai kiểu "đoán thay người dùng" nguy hiểm hơn sai cú pháp. Với hệ thống thật, 70 % chưa đủ nếu không có người duyệt. |
 
 Hạn chế: trong AdventureWorks2022, toàn bộ 31,465 đơn đều có Status = 5, nên bộ test không kiểm tra được việc hệ thống có lọc đúng hay không. Quy tắc này dành cho hệ thống thật, nơi có đơn bị hủy hoặc từ chối.
 
