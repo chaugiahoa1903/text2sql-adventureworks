@@ -25,5 +25,5 @@ for t in tests:
         continue
     cursor.execute(t["sql_chuan"])
     rows = cursor.fetchall()
-    print("   ->", [tuple(r) for r in rows[:10]])
+    print("   ->", [tuple(r) for r in rows[:15]])
 conn.close()
