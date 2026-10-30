@@ -42,6 +42,8 @@ Số liệu đo trên AdventureWorks: SubTotal = 109,846,381.40; LineTotal = 109
 
 Dữ liệu AdventureWorks2022: từ 2011-05-31 đến 2014-06-30. Q1/2011 và từ Q3/2014 không có dữ liệu; Q2/2011 chỉ có từ 31/05 (thiếu một phần). Số đơn tăng vọt từ Q3/2013 (đặc điểm dữ liệu mẫu).
 
+Quy tắc "không có dữ liệu": khi kết quả là NULL, hoặc kỳ được hỏi nằm ngoài khoảng 2011-05-31 đến 2014-06-30, hệ thống trả "không có dữ liệu cho kỳ này", kể cả khi COUNT ra 0. Chưa quyết định: kỳ có dữ liệu một phần (Q2/2011) có cần ghi chú "dữ liệu chỉ từ 31/05" hay không, sẽ xét sau baseline.
+
 ## Metric đánh giá
 - Đúng theo kết quả: so sánh bảng kết quả với SQL chuẩn (không so sánh chuỗi SQL).
 - SQL chạy được (không lỗi cú pháp).
