@@ -19,9 +19,11 @@ with open("tests/test_set.json", encoding="utf-8") as f:
     tests = json.load(f)
 
 for t in tests:
+    print(t["id"], t["cau_hoi"])
+    if not t["sql_chuan"]:
+        print("   -> (không có SQL chuẩn, hành vi mong đợi:", t["hanh_vi_mong_doi"] + ")")
+        continue
     cursor.execute(t["sql_chuan"])
     rows = cursor.fetchall()
-    print(t["id"], t["cau_hoi"])
-    print("   ->", [tuple(r) for r in rows[:3]])
-
+    print("   ->", [tuple(r) for r in rows[:10]])
 conn.close()
