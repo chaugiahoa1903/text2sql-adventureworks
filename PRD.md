@@ -13,10 +13,12 @@ Ghi/sửa/xóa dữ liệu; dự báo; biểu đồ phức tạp; phân quyền 
 | # | Câu hỏi | Lựa chọn của Hòa | Lý do |
 |---|---|---|---|
 | 1 | "Doanh thu" tính theo cột nào? (SubTotal / TotalDue / tổng LineTotal) | Hướng C: mặc định SubTotal, có nhánh TotalDue theo từ khóa, vùng xám thì hỏi lại. | Hướng này sẽ tiếp cận khái quát những gì diễn ra trong quy trình vận hành thực tế. |
-| 2 | Đơn trạng thái nào được tính? (cột Status có đơn bị hủy/từ chối) | ___ | ___ |
+| 2 | Đơn trạng thái nào được tính? (cột Status có đơn bị hủy/từ chối) | A: chỉ tính đơn Status = 5 (Shipped) | Doanh thu ghi nhận khi hàng đã giao cho khách. |
 | 3 | Quý theo lịch hay năm tài chính? | ___ | ___ |
 | 4 | Câu thiếu năm ("doanh thu quý 1"): hỏi lại hay lấy năm gần nhất? | ___ | ___ |
 | 5 | Ngưỡng chấp nhận cho story 1 và 4 | ___ % | ___ |
+
+Hạn chế: trong AdventureWorks2022, toàn bộ 31,465 đơn đều có Status = 5, nên bộ test không kiểm tra được việc hệ thống có lọc đúng hay không. Quy tắc này dành cho hệ thống thật, nơi có đơn bị hủy hoặc từ chối.
 
 ### Quy tắc phân nhánh "doanh thu" (quyết định 1)
 
