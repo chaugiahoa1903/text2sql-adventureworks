@@ -33,12 +33,14 @@ Số liệu đo trên AdventureWorks: SubTotal = 109,846,381.40; LineTotal = 109
 ## User story và acceptance criteria (nháp)
 | # | User story | Acceptance criteria |
 |---|---|---|
-| 1 | Tôi hỏi bằng câu tự nhiên và nhận số liệu đúng | Kết quả khớp SQL chuẩn ≥ ___ % trên bộ test |
+| 1 | Tôi hỏi bằng câu tự nhiên và nhận số liệu đúng | Kết quả khớp SQL chuẩn ≥ 70 % trên bộ test |
 | 2 | Tôi muốn thấy SQL đã chạy | 100% file Excel có sheet ghi câu hỏi, SQL, thời điểm chạy |
 | 3 | Chủ dữ liệu muốn hệ thống không thay đổi dữ liệu | 100% lệnh không phải SELECT bị chặn; kết nối bằng tài khoản chỉ đọc |
-| 4 | Khi câu hỏi mơ hồ, tôi muốn được hỏi lại | Với nhóm câu mơ hồ, hỏi lại đúng ≥ ___ % thay vì tự đoán |
+| 4 | Khi câu hỏi mơ hồ, tôi muốn được hỏi lại | Với nhóm câu mơ hồ, hỏi lại đúng ≥ 80 % thay vì tự đoán ; hỏi lại thừa ≤ 10 % ở câu đã rõ |
 | 5 | Khi không có dữ liệu, tôi muốn biết rõ | 100% trường hợp rỗng trả "không có dữ liệu", không bịa số |
 | 6 | Tôi muốn file Excel dùng được ngay | Số có định dạng, tiêu đề rõ, cột đủ rộng, không cần chỉnh tay |
+
+Dữ liệu AdventureWorks2022: từ 2011-05-31 đến 2014-06-30. Q1/2011 và từ Q3/2014 không có dữ liệu; Q2/2011 chỉ có từ 31/05 (thiếu một phần). Số đơn tăng vọt từ Q3/2013 (đặc điểm dữ liệu mẫu).
 
 ## Metric đánh giá
 - Đúng theo kết quả: so sánh bảng kết quả với SQL chuẩn (không so sánh chuỗi SQL).
