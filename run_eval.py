@@ -79,7 +79,7 @@ def evaluate(t, cursor):
 
 
 def main():
-    with open("tests/test_set.json", encoding="utf-8") as f:
+    with open(os.getenv("TEST_FILE", "tests/test_set.json"), encoding="utf-8") as f:
         tests = json.load(f)
     if LIMIT:
         tests = tests[:LIMIT]

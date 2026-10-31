@@ -61,7 +61,7 @@ def loose_equal(got, gold):
 
 
 def main(round_name):
-    tests = {t["id"]: t for t in json.load(open("tests/test_set.json", encoding="utf-8"))}
+    tests = {t["id"]: t for t in json.load(open(os.getenv("TEST_FILE", "tests/test_set.json"), encoding="utf-8"))}
     data = json.load(open(f"results/{round_name}.json", encoding="utf-8"))
     cursor = pyodbc.connect(conn_str).cursor()
 
