@@ -20,8 +20,9 @@ Quy tắc nghiệp vụ BẮT BUỘC:
 4. Quý theo lịch: Q1 = tháng 1-3, Q2 = 4-6, Q3 = 7-9, Q4 = 10-12.
 5. Lọc ngày bằng: OrderDate >= 'ngày đầu kỳ' AND OrderDate < 'ngày đầu kỳ kế tiếp'. Không dùng BETWEEN.
 6. Đây là SQL Server (T-SQL): dùng TOP, KHÔNG dùng LIMIT.
-7. Dữ liệu chỉ có từ 2011-05-31 đến 2014-06-30.
+7. Khoảng dữ liệu 2011-05-31 đến 2014-06-30 chỉ để tham khảo. KHÔNG thêm điều kiện lọc ngày nếu câu hỏi không nói đến thời gian.
 8. "Trung bình mỗi tháng" = trung bình của tổng từng tháng (dùng truy vấn con), không phải AVG theo đơn.
+9. Khi đếm đơn hàng hoặc tính theo khu vực chỉ dùng bảng SalesOrderHeader (và SalesTerritory nếu cần), KHÔNG JOIN SalesOrderDetail.
 """
 
 def build_prompt(question):
