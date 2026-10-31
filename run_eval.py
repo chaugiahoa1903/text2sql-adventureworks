@@ -8,7 +8,8 @@ from decimal import Decimal
 import pyodbc
 from dotenv import load_dotenv
 
-from sql_guard import check_select_only
+from clarify import needs_clarification
+from sql_guard import check_select_only, check_question
 from text2sql import generate_sql
 
 load_dotenv()
@@ -49,12 +50,22 @@ def is_empty(rows):
 
 def evaluate(t, cursor):
     hv = t["hanh_vi_mong_doi"]
-    sql = generate_sql(t["cau_hoi"], MODEL)
+    q = t["cau_hoi"]
+
+    ok_q, _ = check_question(q)
+    if not ok_q:
+        return "", ("dung" if hv == "chan" else "bi_chan_nham")
+
+    ask, _ = needs_clarification(q)
+    if ask:
+        return "", ("dung" if hv == "hoi_lai" else "hoi_lai_thua")
+
+    sql = generate_sql(q, MODEL)
     ok, reason = check_select_only(sql)
     if hv == "chan":
         return sql, ("dung" if not ok else "khong_chan")
     if hv == "hoi_lai":
-        return sql, "khong_ho_tro_hoi_lai"
+        return sql, "khong_hoi_lai"
     if not ok:
         return sql, "bi_chan_nham"
     try:
@@ -83,6 +94,7 @@ def main():
         try:
             sql, status = evaluate(t, cursor)
         except Exception as e:
+            print("   LOI:", repr(e))
             sql, status = "", "loi_he_thong"
         secs = round(time.time() - start, 1)
         results.append({

@@ -16,3 +16,12 @@ def check_select_only(sql):
         if re.search(rf"\b{word}\b", s, re.IGNORECASE):
             return False, f"Chứa từ khóa bị cấm: {word}"
     return True, "OK"
+
+DANGER_Q = ["xóa", "cập nhật", "thêm một", "drop ", "delete ", "update ", "insert ", "bỏ qua mọi quy tắc"]
+
+def check_question(q):
+    s = q.lower()
+    for w in DANGER_Q:
+        if w in s:
+            return False, f"Câu hỏi yêu cầu thay đổi dữ liệu ({w.strip()})"
+    return True, "OK"
