@@ -11,12 +11,25 @@ Production.Product(ProductID, Name, ProductSubcategoryID, ListPrice)
 Production.ProductSubcategory(ProductSubcategoryID, ProductCategoryID, Name)
 Production.ProductCategory(ProductCategoryID, Name)
 """
+RULES = """
+Quy tắc nghiệp vụ BẮT BUỘC:
+1. "Doanh thu", "doanh số", "bán được bao nhiêu tiền" = SUM(SalesOrderHeader.SubTotal).
+   Khi chia theo sản phẩm hoặc danh mục thì dùng SUM(SalesOrderDetail.LineTotal).
+2. Chỉ dùng TotalDue khi câu hỏi nói rõ "tổng thanh toán", "khách phải trả", "gồm thuế".
+3. Luôn thêm điều kiện SalesOrderHeader.Status = 5 (nếu dùng SalesOrderDetail thì JOIN SalesOrderHeader để lọc).
+4. Quý theo lịch: Q1 = tháng 1-3, Q2 = 4-6, Q3 = 7-9, Q4 = 10-12.
+5. Lọc ngày bằng: OrderDate >= 'ngày đầu kỳ' AND OrderDate < 'ngày đầu kỳ kế tiếp'. Không dùng BETWEEN.
+6. Đây là SQL Server (T-SQL): dùng TOP, KHÔNG dùng LIMIT.
+7. Dữ liệu chỉ có từ 2011-05-31 đến 2014-06-30.
+8. "Trung bình mỗi tháng" = trung bình của tổng từng tháng (dùng truy vấn con), không phải AVG theo đơn.
+"""
 
 def build_prompt(question):
     return (
-        "Bạn là chuyên gia SQL Server (T-SQL). Dựa vào schema dưới đây, "
+        "Bạn là chuyên gia SQL Server (T-SQL). Dựa vào schema và quy tắc dưới đây, "
         "viết MỘT câu SELECT trả lời câu hỏi. Chỉ trả về câu SQL, không giải thích.\n"
         f"Schema:\n{SCHEMA}\n"
+        f"{RULES}\n"
         f"Câu hỏi: {question}\nSQL:"
     )
 
