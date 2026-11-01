@@ -7,6 +7,7 @@ from decimal import Decimal
 
 import pyodbc
 from dotenv import load_dotenv
+from clarify_llm import llm_needs_clarification
 
 from clarify import needs_clarification
 from sql_guard import check_select_only, check_question
@@ -59,7 +60,10 @@ def evaluate(t, cursor):
     ask, _ = needs_clarification(q)
     if ask:
         return "", ("dung" if hv == "hoi_lai" else "hoi_lai_thua")
-
+    
+    if llm_needs_clarification(q, MODEL):
+        return "", ("dung" if hv == "hoi_lai" else "hoi_lai_thua")
+    
     sql = generate_sql(q, MODEL)
     ok, reason = check_select_only(sql)
     if hv == "chan":

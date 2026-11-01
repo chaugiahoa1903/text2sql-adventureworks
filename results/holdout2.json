@@ -1,0 +1,113 @@
+{
+ "model": "qwen2.5-coder:7b",
+ "results": [
+  {
+   "id": 201,
+   "nhom": "doc_lap2_mo_ho",
+   "cau_hoi": "Đầu năm nay bán được nhiều không?",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "",
+   "trang_thai": "dung",
+   "giay": 3.4
+  },
+  {
+   "id": 202,
+   "nhom": "doc_lap2_mo_ho",
+   "cau_hoi": "So sánh các khu vực giúp mình",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "",
+   "trang_thai": "dung",
+   "giay": 3.4
+  },
+  {
+   "id": 203,
+   "nhom": "doc_lap2_mo_ho",
+   "cau_hoi": "Cuối năm ngoái khách đặt bao nhiêu đơn?",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "SELECT COUNT(SalesOrderID) AS TotalOrders\nFROM Sales.SalesOrderHeader\nWHERE Status = 5 AND OrderDate >= '2022-01-01' AND OrderDate < '2023-01-01';",
+   "trang_thai": "khong_hoi_lai",
+   "giay": 15.3
+  },
+  {
+   "id": 204,
+   "nhom": "doc_lap2_mo_ho",
+   "cau_hoi": "Tháng nào là tốt nhất?",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "",
+   "trang_thai": "dung",
+   "giay": 0.0
+  },
+  {
+   "id": 205,
+   "nhom": "doc_lap2_mo_ho",
+   "cau_hoi": "Doanh thu tháng 9",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "",
+   "trang_thai": "dung",
+   "giay": 0.0
+  },
+  {
+   "id": 206,
+   "nhom": "doc_lap2_mo_ho",
+   "cau_hoi": "Khách hàng trả cho mình bao nhiêu năm 2013?",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "SELECT SUM(TotalDue) AS TotalAmountPaid\nFROM Sales.SalesOrderHeader\nWHERE Status = 5 AND OrderDate >= '2013-01-01' AND OrderDate < '2014-01-01';",
+   "trang_thai": "khong_hoi_lai",
+   "giay": 18.0
+  },
+  {
+   "id": 207,
+   "nhom": "doc_lap2_ro_rang",
+   "cau_hoi": "Số đơn hàng của khu vực Canada năm 2012",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT COUNT(SalesOrderID) AS NumberOfOrders\nFROM Sales.SalesOrderHeader\nJOIN Sales.SalesTerritory ON Sales.SalesOrderHeader.TerritoryID = Sales.SalesTerritory.TerritoryID\nWHERE SalesOrderHeader.Status = 5\n  AND SalesTerritory.Name = 'Canada'\n  AND OrderDate >= '2012-01-01' AND OrderDate < '2013-01-01';",
+   "trang_thai": "dung",
+   "giay": 25.5
+  },
+  {
+   "id": 208,
+   "nhom": "doc_lap2_ro_rang",
+   "cau_hoi": "Doanh thu năm 2013 chia theo danh mục sản phẩm",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT \n    pc.Name AS ProductCategory,\n    SUM(sd.LineTotal) AS TotalRevenue\nFROM \n    Sales.SalesOrderDetail sd\nJOIN \n    Sales.SalesOrderHeader soh ON sd.SalesOrderID = soh.SalesOrderID\nJOIN \n    Production.Product p ON sd.ProductID = p.ProductID\nJOIN \n    Production.ProductSubcategory ps ON p.ProductSubcategoryID = ps.ProductSubcategoryID\nJOIN \n    Production.ProductCategory pc ON ps.ProductCategoryID = pc.ProductCategoryID\nWHERE \n    soh.Status = 5\n    AND soh.OrderDate >= '2013-01-01' \n    AND soh.OrderDate < '2014-01-01'\nGROUP BY \n    pc.Name\nORDER BY \n    pc.Name;",
+   "trang_thai": "dung",
+   "giay": 47.7
+  },
+  {
+   "id": 209,
+   "nhom": "doc_lap2_ro_rang",
+   "cau_hoi": "Trong quý 3/2013 có bao nhiêu đơn đặt qua mạng?",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT COUNT(SalesOrderID) AS NumberOfOnlineOrders\nFROM Sales.SalesOrderHeader\nWHERE Status = 5\n  AND OnlineOrderFlag = 1\n  AND OrderDate >= '2013-07-01' AND OrderDate < '2013-10-01';",
+   "trang_thai": "dung",
+   "giay": 28.3
+  },
+  {
+   "id": 210,
+   "nhom": "doc_lap2_ro_rang",
+   "cau_hoi": "Tổng phí vận chuyển quý 1 năm 2013",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT SUM(SalesOrderHeader.Freight) AS TotalFreight\nFROM Sales.SalesOrderHeader\nWHERE SalesOrderHeader.Status = 5\n  AND SalesOrderHeader.OrderDate >= '2013-01-01'\n  AND SalesOrderHeader.OrderDate < '2013-04-01';",
+   "trang_thai": "dung",
+   "giay": 19.7
+  },
+  {
+   "id": 211,
+   "nhom": "doc_lap2_ro_rang",
+   "cau_hoi": "Giá niêm yết cao nhất của một sản phẩm là bao nhiêu?",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "",
+   "trang_thai": "hoi_lai_thua",
+   "giay": 3.6
+  },
+  {
+   "id": 212,
+   "nhom": "doc_lap2_ro_rang",
+   "cau_hoi": "Doanh thu năm 2012 của nhóm khu vực Europe",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT SUM(SalesOrderHeader.SubTotal) AS TotalRevenue\nFROM Sales.SalesOrderHeader\nJOIN Sales.SalesTerritory ON SalesOrderHeader.TerritoryID = SalesTerritory.TerritoryID\nWHERE SalesOrderHeader.Status = 5\n  AND SalesTerritory.[Group] = 'Europe'\n  AND SalesOrderHeader.OrderDate >= '2012-01-01' AND SalesOrderHeader.OrderDate < '2013-01-01';",
+   "trang_thai": "dung",
+   "giay": 26.4
+  }
+ ]
+}
