@@ -4,12 +4,13 @@ import requests
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 SCHEMA = """
-Sales.SalesOrderHeader(SalesOrderID, OrderDate, Status, OnlineOrderFlag, CustomerID, TerritoryID, SubTotal, TaxAmt, Freight, TotalDue)
-Sales.SalesOrderDetail(SalesOrderID, SalesOrderDetailID, OrderQty, ProductID, UnitPrice, LineTotal)
-Sales.SalesTerritory(TerritoryID, Name, CountryRegionCode, [Group])
+Sales.SalesOrderHeader(SalesOrderID, OrderDate, Status /* luôn = 5 */, OnlineOrderFlag /* 1 = đơn online, 0 = bán trực tiếp */, CustomerID, TerritoryID, SubTotal /* tiền hàng, chưa thuế và vận chuyển */, TaxAmt /* thuế */, Freight /* phí vận chuyển */, TotalDue /* = SubTotal + TaxAmt + Freight */)
+Sales.SalesOrderDetail(SalesOrderID, SalesOrderDetailID, OrderQty /* số lượng */, ProductID, UnitPrice, LineTotal /* tiền hàng của dòng */)
+Sales.SalesTerritory(TerritoryID, Name /* tên khu vực, giá trị: Northwest, Northeast, Central, Southwest, Southeast, Canada, France, Germany, Australia, United Kingdom */, CountryRegionCode /* mã quốc gia 2 chữ cái: US, CA, FR, DE, AU, GB. KHÔNG phải tên. 5 khu vực Mỹ đều là US */, [Group] /* North America, Europe, Pacific */)
 Production.Product(ProductID, Name, ProductSubcategoryID, ListPrice)
 Production.ProductSubcategory(ProductSubcategoryID, ProductCategoryID, Name)
-Production.ProductCategory(ProductCategoryID, Name)
+Production.ProductCategory(ProductCategoryID, Name /* giá trị: Bikes, Components, Clothing, Accessories */)
+Khi lọc theo tên khu vực dùng SalesTerritory.Name, không dùng CountryRegionCode.
 """
 RULES = """
 Quy tắc nghiệp vụ BẮT BUỘC:

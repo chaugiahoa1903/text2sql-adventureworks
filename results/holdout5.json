@@ -1,0 +1,113 @@
+{
+ "model": "qwen2.5-coder:7b",
+ "results": [
+  {
+   "id": 101,
+   "nhom": "doc_lap_mo_ho",
+   "cau_hoi": "Khu vực nào mang lại nhiều nhất?",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "SELECT TOP 1 s.Name AS TerritoryName, SUM(h.SubTotal) AS TotalSales\nFROM Sales.SalesOrderHeader h\nJOIN Sales.SalesTerritory s ON h.TerritoryID = s.TerritoryID\nWHERE h.Status = 5\nGROUP BY s.Name\nORDER BY TotalSales DESC;",
+   "trang_thai": "khong_hoi_lai",
+   "giay": 124.7
+  },
+  {
+   "id": 102,
+   "nhom": "doc_lap_mo_ho",
+   "cau_hoi": "Doanh thu mùa hè",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "SELECT SUM(SalesOrderHeader.SubTotal) AS TotalRevenue\nFROM Sales.SalesOrderHeader\nJOIN Sales.SalesTerritory ON SalesOrderHeader.TerritoryID = Sales.SalesTerritory.TerritoryID\nWHERE SalesOrderHeader.Status = 5\n  AND SalesOrderHeader.OrderDate >= '2011-06-01' AND SalesOrderHeader.OrderDate < '2011-09-01'\n  AND Sales.SalesTerritory.Name IN ('Southeast', 'Southwest', 'Central', 'Northeast', 'Northwest');",
+   "trang_thai": "khong_hoi_lai",
+   "giay": 23.7
+  },
+  {
+   "id": 103,
+   "nhom": "doc_lap_mo_ho",
+   "cau_hoi": "Cho mình biết tình hình kinh doanh năm 2012",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "SELECT \n    Q1 = SUM(CASE WHEN MONTH(OrderDate) BETWEEN 1 AND 3 THEN TotalDue ELSE 0 END),\n    Q2 = SUM(CASE WHEN MONTH(OrderDate) BETWEEN 4 AND 6 THEN TotalDue ELSE 0 END),\n    Q3 = SUM(CASE WHEN MONTH(OrderDate) BETWEEN 7 AND 9 THEN TotalDue ELSE 0 END),\n    Q4 = SUM(CASE WHEN MONTH(OrderDate) BETWEEN 10 AND 12 THEN TotalDue ELSE 0 END)\nFROM \n    Sales.SalesOrderHeader\nWHERE \n    Status = 5 AND OrderDate >= '2012-01-01' AND OrderDate < '2013-01-01';",
+   "trang_thai": "khong_hoi_lai",
+   "giay": 31.1
+  },
+  {
+   "id": 104,
+   "nhom": "doc_lap_mo_ho",
+   "cau_hoi": "Khách hàng chi bao nhiêu trong quý 3?",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "",
+   "trang_thai": "dung",
+   "giay": 0.0
+  },
+  {
+   "id": 105,
+   "nhom": "doc_lap_mo_ho",
+   "cau_hoi": "Sản phẩm nào đem lại nhiều nhất năm 2013?",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "SELECT TOP 1 p.Name, SUM(sod.LineTotal) AS TotalRevenue\nFROM Sales.SalesOrderDetail sod\nJOIN Sales.SalesOrderHeader soh ON sod.SalesOrderID = soh.SalesOrderID\nJOIN Production.Product p ON sod.ProductID = p.ProductID\nWHERE soh.Status = 5 AND YEAR(soh.OrderDate) = 2013\nGROUP BY p.Name\nORDER BY TotalRevenue DESC;",
+   "trang_thai": "khong_hoi_lai",
+   "giay": 19.4
+  },
+  {
+   "id": 106,
+   "nhom": "doc_lap_mo_ho",
+   "cau_hoi": "Tổng số tiền thu được trong năm 2012",
+   "hanh_vi_mong_doi": "hoi_lai",
+   "sql_sinh_ra": "SELECT SUM(SalesOrderHeader.TotalDue) AS TotalRevenue\nFROM Sales.SalesOrderHeader\nWHERE SalesOrderHeader.Status = 5\n  AND SalesOrderHeader.OrderDate >= '2012-01-01'\n  AND SalesOrderHeader.OrderDate < '2013-01-01';",
+   "trang_thai": "khong_hoi_lai",
+   "giay": 15.5
+  },
+  {
+   "id": 107,
+   "nhom": "doc_lap_ro_rang",
+   "cau_hoi": "Số đơn hàng online năm 2013",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT COUNT(SalesOrderID) AS NumberOfOnlineOrders\nFROM Sales.SalesOrderHeader\nWHERE OnlineOrderFlag = 1\n  AND OrderDate >= '2013-01-01'\n  AND OrderDate < '2014-01-01';",
+   "trang_thai": "dung",
+   "giay": 73.4
+  },
+  {
+   "id": 108,
+   "nhom": "doc_lap_ro_rang",
+   "cau_hoi": "Doanh thu quý 2 năm 2012",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT SUM(SalesOrderHeader.SubTotal) AS TotalRevenue\nFROM Sales.SalesOrderHeader\nJOIN Sales.SalesTerritory ON SalesOrderHeader.TerritoryID = Sales.SalesTerritory.TerritoryID\nWHERE SalesOrderHeader.Status = 5\n  AND SalesOrderHeader.OrderDate >= '2012-04-01'\n  AND SalesOrderHeader.OrderDate < '2012-07-01';",
+   "trang_thai": "dung",
+   "giay": 275.8
+  },
+  {
+   "id": 109,
+   "nhom": "doc_lap_ro_rang",
+   "cau_hoi": "Doanh thu theo từng tháng trong quý 1 năm 2013",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT \n    DATEPART(MONTH, OrderDate) AS Month,\n    SUM(SubTotal) AS TotalRevenue\nFROM \n    Sales.SalesOrderHeader\nWHERE \n    Status = 5\n    AND OrderDate >= '2013-01-01'\n    AND OrderDate < '2013-04-01'\nGROUP BY \n    DATEPART(MONTH, OrderDate)\nORDER BY \n    Month;",
+   "trang_thai": "dung",
+   "giay": 136.3
+  },
+  {
+   "id": 110,
+   "nhom": "doc_lap_ro_rang",
+   "cau_hoi": "Có bao nhiêu khách hàng mua hàng năm 2012?",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT COUNT(DISTINCT CustomerID) AS NumberOfCustomers\nFROM Sales.SalesOrderHeader\nWHERE OrderDate >= '2012-01-01' AND OrderDate < '2013-01-01'\n  AND Status = 5;",
+   "trang_thai": "dung",
+   "giay": 11.0
+  },
+  {
+   "id": 111,
+   "nhom": "doc_lap_ro_rang",
+   "cau_hoi": "Doanh thu của khu vực Australia năm 2013",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT SUM(SalesOrderHeader.SubTotal) AS TotalRevenue\nFROM Sales.SalesOrderHeader\nJOIN Sales.SalesTerritory ON SalesOrderHeader.TerritoryID = SalesTerritory.TerritoryID\nWHERE SalesOrderHeader.Status = 5\n  AND SalesTerritory.Name = 'Australia'\n  AND SalesOrderHeader.OrderDate >= '2013-01-01' AND SalesOrderHeader.OrderDate < '2014-01-01';",
+   "trang_thai": "dung",
+   "giay": 20.3
+  },
+  {
+   "id": 112,
+   "nhom": "doc_lap_ro_rang",
+   "cau_hoi": "Tổng thanh toán quý 1 năm 2014 của khách",
+   "hanh_vi_mong_doi": "chay_sql",
+   "sql_sinh_ra": "SELECT SUM(SalesOrderHeader.TotalDue) AS TotalRevenue\nFROM Sales.SalesOrderHeader\nJOIN Sales.SalesTerritory ON SalesOrderHeader.TerritoryID = SalesTerritory.TerritoryID\nWHERE SalesOrderHeader.Status = 5\n  AND SalesOrderHeader.OrderDate >= '2014-01-01'\n  AND SalesOrderHeader.OrderDate < '2014-04-01';",
+   "trang_thai": "dung",
+   "giay": 19.8
+  }
+ ]
+}
