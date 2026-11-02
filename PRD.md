@@ -56,3 +56,12 @@ Tổng hợp đơn giản; lọc theo thời gian; JOIN nhiều bảng; nhóm th
 
 ## Rủi ro đã biết
 Định nghĩa doanh thu sai; nhầm quý; LLM local nhỏ dễ sinh SQL sai cú pháp T-SQL (ví dụ dùng LIMIT thay vì TOP); dữ liệu chỉ có vài năm.
+
+
+## Mô-đun CRM: khuyến mãi và khách mua lại
+
+| # | Câu hỏi | Lựa chọn | Lý do |
+|---|---|---|---|
+| CRM-1 | "Dòng hàng có khuyến mãi" nghĩa là gì? | C: tách hai loại theo cột Type của Sales.SpecialOffer. "Giảm giá theo số lượng" là Type = Volume Discount. "Khuyến mãi chiến dịch" là các Type còn lại, trừ No Discount. | (NHÁP) Giảm giá theo số lượng là cơ chế tự động theo số lượng mua, chiếm 5.5% doanh thu. Chiến dịch mới là thứ nhóm CRM thiết kế và đo, chỉ chiếm 1.3% doanh thu. Gộp chung thành 6.8% sẽ che mất sự khác biệt này. |
+
+Hạn chế: dữ liệu là khuyến mãi theo dòng hàng, không phải voucher. Không có dữ liệu phát hành hay đổi voucher, và không có nhóm đối chứng nên chỉ phân tích mô tả, không kết luận khuyến mãi làm tăng doanh thu. Còn mở: 2,151 dòng có mã khuyến mãi nhưng UnitPriceDiscount bằng 0, chưa giải thích được.
