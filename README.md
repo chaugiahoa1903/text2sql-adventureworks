@@ -17,9 +17,9 @@ Không cần API key nào để chạy.
 ## Cách chạy lại từ đầu
 
 1. Cài Python 3.11, SQL Server (Developer hoặc Express), ODBC Driver 18, Ollama.
-2. Tải AdventureWorks2022 từ trang chính thức của Microsoft (___ dán link) và khôi phục vào SQL Server. Không commit file `.bak`.
+2. Tải AdventureWorks2022 từ trang chính thức của Microsoft (`https://learn.microsoft.com/en-us/sql/samples/adventureworks-install-configure?view=sql-server-ver17&tabs=ssms`) và khôi phục vào SQL Server. Không commit file `.bak`.
 3. Tạo tài khoản đăng nhập chỉ đọc (`db_datareader`) cho database.
-4. Tải model: `ollama pull qwen2.5-coder:7b` (___ ghi phiên bản chính xác từ `ollama list`).
+4. Tải model: `ollama pull qwen2.5-coder:7b` (`https://ollama.com/download/windows` ghi phiên bản chính xác từ `ollama list`).
 5. Sao chép `.env.example` thành `.env` rồi điền thông tin kết nối. Không commit `.env`.
 6. Cài thư viện: `pip install -r requirements.txt`
 7. Chạy: `uvicorn server:app --port 8000`, mở `http://localhost:8000`.
@@ -41,7 +41,7 @@ AdventureWorks2022 (dữ liệu mẫu của Microsoft, ___ ghi giấy phép sau 
 
 - 70 câu hỏi, 9 nhóm. Câu hỏi do AI soạn nháp, **SQL chuẩn do tôi tự chạy và đối chiếu số liệu** trên SQL Server.
 - Đo theo **kết quả**: so sánh bảng kết quả với SQL chuẩn, không so sánh chuỗi SQL. Chấm "lenient" (bỏ qua tên cột, thứ tự cột, cột thừa) và "strict", báo cả hai.
-- Hai bộ holdout, 12 câu mỗi bộ (id 101 đến 112 và 201 đến 212), soạn sau khi cố định prompt của từng vòng để kiểm tra việc học thuộc.
+- Hai bộ holdout, 12 câu mỗi bộ (id 101 đến 112 và 201 đến 212), dùng để kiểm tra việc học thuộc. Lưu ý: vòng 5 được sửa sau khi tôi thấy câu q111 của holdout 1 bị sai, nên kết quả holdout 1 của vòng 5 và 6 không còn độc lập hoàn toàn. Holdout 2 do AI soạn nên cũng kém độc lập hơn.
 - Model chạy ở `temperature = 0`. Chạy lại vòng 5 và vòng 6 cho kết quả giống hệt vòng đầu.
 
 ## Kết quả theo vòng (70 câu, đúng strict / lenient)
