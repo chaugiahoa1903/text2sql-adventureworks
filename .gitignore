@@ -9,3 +9,6 @@ outputs/
 *.xlsx
 !examples/*.xlsx
 .DS_Store
+03_PRD_DRAFT.md
+results/test.json
+app.py
