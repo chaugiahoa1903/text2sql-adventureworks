@@ -3,12 +3,16 @@ from datetime import datetime
 from decimal import Decimal
 
 import pyodbc
+import requests
 import xlsxwriter
 from dotenv import load_dotenv
 
 from clarify import needs_clarification
 from clarify_llm import llm_needs_clarification
+from scope import unsupported_topic
+from sql_fix import fix_sql
 from sql_guard import check_select_only, check_question
+from suggest import plan as make_plan
 from text2sql import generate_sql
 
 load_dotenv()
@@ -23,24 +27,44 @@ CONN_STR = (
     "TrustServerCertificate=yes;"
 )
 
+# Các lỗi cho thấy SQL nhắc tới cột hoặc bảng không có trong schema của hệ thống
+UNSUPPORTED_HINTS = ("Invalid column name", "Invalid object name", "could not be bound")
 
-def answer(question):
-    """Trả về dict: status (blocked / clarify / no_data / ok / error), message, sql, columns, rows."""
+
+def _clarify(question, message):
+    return {"status": "clarify", "message": message, "plan": make_plan(question)}
+
+
+def answer(question, confirmed=False):
+    """Trả về dict: status (blocked / clarify / no_data / unsupported / ok / error), message, sql, detail, fixes, columns, rows, plan.
+    confirmed=True: người dùng đã chọn cách hiểu bằng nút, bỏ qua bước hỏi lại."""
     ok_q, why = check_question(question)
     if not ok_q:
         return {"status": "blocked", "message": f"Từ chối: {why}. Hệ thống chỉ đọc dữ liệu."}
 
-    ask, msg = needs_clarification(question)
-    if ask:
-        return {"status": "clarify", "message": msg}
-    if llm_needs_clarification(question, MODEL):
-        return {"status": "clarify",
-                "message": "Câu hỏi chưa rõ chỉ tiêu hoặc thời gian. Bạn nói rõ hơn được không?"}
+    topic = unsupported_topic(question)
+    if topic:
+        return {"status": "unsupported",
+                "message": f"Câu hỏi về {topic} nằm ngoài phạm vi hiện tại của hệ thống."}
 
-    sql = generate_sql(question, MODEL)
+    if not confirmed:
+        ask, msg = needs_clarification(question)
+        if ask:
+            return _clarify(question, msg)
+    try:
+        if not confirmed and llm_needs_clarification(question, MODEL):
+            return _clarify(question, "Câu hỏi chưa rõ chỉ tiêu hoặc thời gian. Bạn nói rõ hơn được không?")
+        sql = generate_sql(question, MODEL)
+    except requests.exceptions.ConnectionError:
+        return {"status": "error",
+                "message": "Chưa kết nối được Ollama. Hãy mở ứng dụng Ollama rồi hỏi lại."}
+
+    sql, fixes = fix_sql(sql)
+    extra = {"fixes": fixes} if fixes else {}
+
     ok, why = check_select_only(sql)
     if not ok:
-        return {"status": "blocked", "message": f"Từ chối: {why}.", "sql": sql}
+        return {"status": "blocked", "message": f"Từ chối: {why}.", "sql": sql, **extra}
 
     try:
         conn = pyodbc.connect(CONN_STR)
@@ -50,12 +74,23 @@ def answer(question):
         rows = [list(r) for r in cur.fetchmany(1000)]
         conn.close()
     except Exception as e:
-        return {"status": "error", "message": f"SQL chạy lỗi: {e}", "sql": sql}
+        detail = str(e)
+        if any(h in detail for h in UNSUPPORTED_HINTS):
+            return {"status": "unsupported",
+                    "message": "Có thể dữ liệu hiện có không chứa thông tin này, hoặc câu hỏi cần diễn đạt lại.",
+                    "sql": sql, "detail": detail, **extra}
+        if "Incorrect syntax" in detail:
+            return {"status": "error",
+                    "message": "Hệ thống viết câu truy vấn chưa đúng cú pháp. Bạn thử diễn đạt khác đi, ví dụ nêu thêm khoảng thời gian hoặc tên chỉ tiêu.",
+                    "sql": sql, "detail": detail, **extra}
+        return {"status": "error",
+                "message": "Hệ thống chưa chạy được câu này. Bạn thử nêu rõ chỉ tiêu và khoảng thời gian.",
+                "sql": sql, "detail": detail, **extra}
 
     empty = (not rows) or all(v is None or v == 0 for v in rows[0])
     if empty:
-        return {"status": "no_data", "message": "Không có dữ liệu cho kỳ này.", "sql": sql}
-    return {"status": "ok", "sql": sql, "columns": columns, "rows": rows}
+        return {"status": "no_data", "message": "Không có dữ liệu cho kỳ này.", "sql": sql, **extra}
+    return {"status": "ok", "sql": sql, "columns": columns, "rows": rows, **extra}
 
 
 def export_excel(question, result, path):
@@ -93,6 +128,9 @@ def export_excel(question, result, path):
     info.write(2, 1, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), wrap)
     info.write(3, 0, "Model", head)
     info.write(3, 1, MODEL, wrap)
+    if result.get("fixes"):
+        info.write(4, 0, "Tự sửa cú pháp", head)
+        info.write(4, 1, "; ".join(result["fixes"]), wrap)
     wb.close()
 
 

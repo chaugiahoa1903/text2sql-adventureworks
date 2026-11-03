@@ -1,4 +1,5 @@
 import requests
+import os
 
 from text2sql import OLLAMA_URL
 
@@ -24,6 +25,7 @@ def llm_needs_clarification(question, model):
             "model": model,
             "prompt": CLASSIFY_PROMPT.format(question=question),
             "stream": False,
+            "keep_alive": os.getenv("OLLAMA_KEEP_ALIVE", "10m"),
             "options": {"temperature": 0, "num_predict": 5},
         },
         timeout=300,

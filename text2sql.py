@@ -1,5 +1,6 @@
 import re
 import requests
+import os
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
@@ -12,6 +13,7 @@ Production.ProductSubcategory(ProductSubcategoryID, ProductCategoryID, Name)
 Production.ProductCategory(ProductCategoryID, Name /* giá trị: Bikes, Components, Clothing, Accessories */)
 Khi lọc theo tên khu vực dùng SalesTerritory.Name, không dùng CountryRegionCode.
 """
+
 RULES = """
 Quy tắc nghiệp vụ BẮT BUỘC:
 1. "Doanh thu", "doanh số", "bán được bao nhiêu tiền" = SUM(SalesOrderHeader.SubTotal).
@@ -26,6 +28,7 @@ Quy tắc nghiệp vụ BẮT BUỘC:
 9. Khi đếm đơn hàng hoặc tính theo khu vực chỉ dùng bảng SalesOrderHeader (và SalesTerritory nếu cần), KHÔNG JOIN SalesOrderDetail.
 """
 
+
 def build_prompt(question):
     return (
         "Bạn là chuyên gia SQL Server (T-SQL). Dựa vào schema và quy tắc dưới đây, "
@@ -35,10 +38,12 @@ def build_prompt(question):
         f"Câu hỏi: {question}\nSQL:"
     )
 
+
 def extract_sql(text):
     m = re.search(r"```(?:sql)?\s*(.*?)```", text, re.DOTALL | re.IGNORECASE)
     sql = m.group(1) if m else text
     return sql.strip()
+
 
 def generate_sql(question, model):
     resp = requests.post(
@@ -47,12 +52,14 @@ def generate_sql(question, model):
             "model": model,
             "prompt": build_prompt(question),
             "stream": False,
+            "keep_alive": os.getenv("OLLAMA_KEEP_ALIVE", "10m"),
             "options": {"temperature": 0},
         },
         timeout=300,
     )
     resp.raise_for_status()
     return extract_sql(resp.json()["response"])
+
 
 if __name__ == "__main__":
     import os
