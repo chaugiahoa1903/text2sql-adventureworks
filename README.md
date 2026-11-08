@@ -83,7 +83,7 @@ Ba lỗi đáng chú ý:
 ## Hạn chế và những điều chưa chứng minh
 
 - **Dữ liệu mẫu, không có người dùng thật.** Không nên suy ra hiệu quả khi dùng ở môi trường thật.
-- **Nhãn do tôi tự gán**, chưa có người thứ hai kiểm. Độ nhất quán nhãn của chính tôi (gán lại 15 đến 20 câu sau vài ngày): ___ (chưa đo).
+- **Nhãn do tôi tự gán**, chưa có người thứ hai kiểm.
 - Các nhóm "mơ hồ", "định nghĩa", "nguy hiểm" đạt 100% là do **học thuộc**: các quy tắc được viết sau khi tôi đã thấy đáp án. Holdout mới là phép đo gần thực tế hơn.
 - Mỗi nhóm trong holdout chỉ có 6 câu, quá nhỏ để kết luận chắc. Holdout 2 do AI soạn nên kém độc lập hơn holdout 1.
 - Mục tiêu hỏi lại đúng từ 80% trở lên **chưa đạt** (tốt nhất 4/6 trên holdout 2).
